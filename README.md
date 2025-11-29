@@ -1,76 +1,121 @@
-ParkScope – AI-Based Parking Difficulty Prediction
-Project Motivation
+🚘 ParkScope – AI-Based Parking Difficulty Prediction
+⭐ Project Motivation
 
-Finding street parking in dense urban areas often leads to long search times, traffic congestion, and frustration.
-Current navigation systems (Waze, Google Maps) do not provide any prediction of parking difficulty near the destination.
+Finding street parking in dense urban areas often results in long search times, increased congestion, wasted fuel, and driver frustration.
+Despite advanced navigation tools, no existing system (Waze, Google Maps) provides a real-time estimation of how difficult it will be to find parking near your destination.
 
-Problem Statement
+ParkScope introduces an AI-driven parking difficulty estimator designed to enhance navigation and reduce unnecessary driving loops.
 
-Given a single street-level image, predict a Parking Difficulty Score (1–10) representing how hard it will be to find parking in that area.
+🎯 Problem Statement
 
-Visual Abstract
+Predict a Parking Difficulty Score (1–10) from a single street-level image, indicating how likely it is to find an available parking spot in that area.
 
-(Add pipeline_diagram.png here)
+1 → very easy to park
+10 → extremely difficult
 
-Dataset
+🧩 Visual Abstract
 
-Real street images (Cityscapes, BDD100K)
+(Insert pipeline_diagram.png here)
+A high-level overview of the detection, feature extraction, and regression components used to generate the difficulty score.
 
-Synthetic images generated with Stable Diffusion
+📚 Dataset
 
-Automatically labeled using density-based heuristics
+ParkScope uses a combination of real, synthetic, and auto-labeled data:
 
-Numerical features: car_count, curb_length, density_ratio
+Real street images
+From datasets like Cityscapes and BDD100K.
 
-Data Augmentation & Generation
+Synthetic images
+Generated with Stable Diffusion to create scenes with varying densities, lighting, weather, and street layouts.
 
-Synthetic street scenes (crowded / empty / different times of day)
+Auto-generated labels
+Using parking density heuristics derived from object detection & curb segmentation.
 
-Augmentations: brightness, shadows, blur, rain, night scenes
+Numerical features
 
-Auto-labeling: YOLO/DETR detection + curb segmentation → density → score
+car_count
 
-Models & Pipelines
+curb_length
 
-1. YOLO/DETR – detect parked vehicles
-2. Segmentation model – extract curb area
-3. Feature computation – density ratio
-4. Regression Models:
+density_ratio
 
-XGBoost Regressor
+Additional contextual features extracted from segmentation.
 
-ResNet50 (fine-tuned regression)
+🔧 Data Augmentation & Generation
 
-Vision Transformer (ViT-B/16)
+To improve robustness and expand the dataset:
 
-Training Process
+Synthetic variations: crowded vs. empty streets
 
-Train baseline XGBoost on numeric features
+Time-of-day changes: morning, afternoon, night
 
-Fine-tune ResNet & ViT on images
+Weather simulation: rain, fog, low visibility
 
-Compare all models across same test set
+Image augmentations: brightness, contrast, blur, shadows
 
-Hyperparameter tuning + augmentation refinements
+Labeling Pipeline:
+YOLO/DETR (car detection) → curb segmentation → density calculation → difficulty score
 
-Metrics
+🧠 Models & Pipelines
+1. Detection Layer
 
-MAE
+YOLO/DETR for identifying parked vehicles and extracting bounding boxes.
 
-RMSE
+2. Segmentation Layer
 
-Difficulty category accuracy
+Curb and road segmentation to estimate available parking space.
 
-Pearson correlation
+3. Feature Computation
 
-Results
+Density ratio = number_of_cars / curb_length
 
-(Add graphs from results/visualizations)
+4. Regression Models
 
-Repository Structure
+XGBoost Regressor (baseline for numeric features)
 
-(Use the tree structure above)
+ResNet50 (fine-tuned vision regression model)
 
-Team Members
+Vision Transformer (ViT-B/16) (state-of-the-art deep learning model)
+
+🏋️ Training Process
+
+Train XGBoost baseline using extracted features.
+
+Fine-tune ResNet50 and ViT on full images.
+
+Compare model performance across the same validation/test sets.
+
+Tune hyperparameters and experiment with augmentation strategies.
+
+Evaluate and refine density-based labeling heuristics.
+
+📏 Metrics
+
+Models are evaluated using:
+
+MAE – Mean Absolute Error
+
+RMSE – Root Mean Square Error
+
+Difficulty Category Accuracy (easy / medium / hard)
+
+Pearson Correlation between prediction and true density
+
+📈 Results
+
+(Insert plots, tables, and visualizations here.)
+Examples include:
+
+Comparison charts of model performance
+
+Error distribution graphs
+
+Qualitative examples of predicted scores vs. ground truth
+
+📁 Repository Structure
+
+(Insert the structure you approved earlier.)
+
+👤 Team Members
 
 Lior Yanwo
