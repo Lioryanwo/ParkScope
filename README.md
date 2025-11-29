@@ -1,61 +1,76 @@
-# VibeFinder – Personalized Song Prediction
+ParkScope – AI-Based Parking Difficulty Prediction
+Project Motivation
 
-## 🎵 Project Overview
-VibeFinder is a machine learning project designed to predict which songs a user is most likely to enjoy, using real music data from the Spotify Web API.  
-The system analyzes audio features, listening history, and user behavior patterns to generate accurate and personalized song recommendations.
+Finding street parking in dense urban areas often leads to long search times, traffic congestion, and frustration.
+Current navigation systems (Waze, Google Maps) do not provide any prediction of parking difficulty near the destination.
 
----
+Problem Statement
 
-## 🎯 Problem Definition
-With millions of tracks available on streaming platforms, users often struggle to discover new music that truly matches their personal taste.  
-While Spotify provides recommendation playlists, they may not always reflect each user's unique preferences.
+Given a single street-level image, predict a Parking Difficulty Score (1–10) representing how hard it will be to find parking in that area.
 
-**This project defines the prediction task as follows:**
+Visual Abstract
 
-- **Input:**  
-  - User’s Top Tracks  
-  - Recently Played Tracks  
-  - Audio Features (energy, valence, tempo, danceability, etc.)
+(Add pipeline_diagram.png here)
 
-- **Output:**  
-  - A ranked list of recommended songs  
-  - A match/similarity score for each track
+Dataset
 
----
+Real street images (Cityscapes, BDD100K)
 
-## 📊 Data Sources
-All data is retrieved directly from:
+Synthetic images generated with Stable Diffusion
 
-### ✔️ Spotify Web API
-- Audio Features  
-- Track Metadata  
-- Listening History  
-- Artist and Genre Information  
+Automatically labeled using density-based heuristics
 
-**No manual labeling is required — the API provides rich, structured data.**
+Numerical features: car_count, curb_length, density_ratio
 
----
+Data Augmentation & Generation
 
-## 🧠 Planned Models and Methods
-- **Baseline Models:**  
-  - Decision tree
-  - K-Nearest Neighbors (KNN)
+Synthetic street scenes (crowded / empty / different times of day)
 
-- **Advanced Models (next stages):**  
-  - XGBoost  
-  - Neural Networks  
-  - Hybrid recommendation models
+Augmentations: brightness, shadows, blur, rain, night scenes
 
----
+Auto-labeling: YOLO/DETR detection + curb segmentation → density → score
 
-## 📏 Evaluation Metrics
-The system’s performance will be evaluated based on:
+Models & Pipelines
 
-- **Precision** – Proportion of relevant recommended songs  
-- **Recall** – Ability to recover songs the user actually likes  
-- **Hit Ratio** – Whether at least one recommendation matches the user’s taste  
-- **Future**: User feedback / qualitative evaluation
+1. YOLO/DETR – detect parked vehicles
+2. Segmentation model – extract curb area
+3. Feature computation – density ratio
+4. Regression Models:
 
----
+XGBoost Regressor
 
-## 📁 Repository Structure
+ResNet50 (fine-tuned regression)
+
+Vision Transformer (ViT-B/16)
+
+Training Process
+
+Train baseline XGBoost on numeric features
+
+Fine-tune ResNet & ViT on images
+
+Compare all models across same test set
+
+Hyperparameter tuning + augmentation refinements
+
+Metrics
+
+MAE
+
+RMSE
+
+Difficulty category accuracy
+
+Pearson correlation
+
+Results
+
+(Add graphs from results/visualizations)
+
+Repository Structure
+
+(Use the tree structure above)
+
+Team Members
+
+Lior Yanwo
