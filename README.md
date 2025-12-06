@@ -1,119 +1,126 @@
-🚘 ParkScope – Detecting Free Street Parking Spots from a Single Image
-AI-Based Parking Spot Detection using YOLO + Inpainting
+🚘 ParkScope – AI-Based Free Street Parking Spot Detection
+Object Detection Using YOLO + Inpainting
 ⭐ Overview
 
-מציאת חניה ברחוב היא משימה יומיומית מתסכלת. פרויקט ParkScope בונה מערכת שמזהה מקומות חניה פנויים בתמונת רחוב יחידה — ללא מידע חיצוני, ללא חיישנים וללא נתונים היסטוריים.
+Finding street parking in dense urban environments is a daily challenge. ParkScope proposes a vision-based system that detects free parking spots from a single street-level image — without sensors, without historical data, and without manual labeling.
 
-המערכת משתמשת ב:
+The system relies on:
 
-זיהוי רכבים קיימים
+Car detection
 
-מחיקה חכמה (Inpainting) של הרכבים
+Diffusion-based inpainting to remove vehicles
 
-יצירת תוויות (Labels) אוטומטיות של חניות פנויות
+Automatic generation of parking-spot labels
 
-אימון מודל YOLO לגילוי חניות בתמונת רחוב אמיתית
+Training a YOLO model to detect free parking spaces
 
 🎯 Project Goal
 
-Train an object detection model that identifies free parking spots in street-level images.
+Train an object detection model that identifies free parking spots in real street images.
 
-כלומר — הפלט הוא:
+The model outputs:
 
-Bounding boxes של מקומות חניה פנויים
+Bounding boxes corresponding to empty parking spots
 
 🧩 System Pipeline
- Street Image → Car Detection (YOLO) → Inpainting → Label Generation → Train YOLO → Detect Free Spots
+Street Image → Car Detection (YOLO) → Inpainting → Auto-Labeling → Train YOLO → Predict Free Spots
 
 📚 Dataset
 
-הדאטה של ParkScope מורכב משני מקורות:
+ParkScope uses two types of data:
 
 1️⃣ Real Images
 
-KITTI Dataset – תמונות רחוב אמיתיות מצולמות ממצלמת רכב.
-משמשות כבסיס לבניית הדאטה.
+KITTI Dataset – real street-level images captured from a car-mounted camera.
 
-2️⃣ Auto-Generated Training Data
+These serve as the foundation for generating labeled training samples.
 
-נוצר בתהליך אוטומטי:
+2️⃣ Automatically Generated Training Data
 
-מפעילים YOLO כדי לזהות רכבים בתמונה.
+Created via a custom labeling pipeline:
 
-מוחקים את הרכבים באמצעות Diffusion-based Inpainting או כלי inpainting אחר.
+YOLO detects all cars in the scene.
 
-הרקע המשוחזר מגלה את האזורים המועמדים לחניה פנויה.
+A diffusion-based inpainting model removes the cars.
 
-מייצרים תוויות (bounding boxes) למקומות החניה האלו.
+The reconstructed sidewalk/curb reveals potential free parking areas.
+
+These areas are converted into bounding-box labels for “Free Parking Spot.”
+
+This enables large-scale dataset creation without manual annotation.
 
 🏗️ Data Generation Pipeline
 ✔️ Car Detection
 
-YOLO מזהה bounding boxes של כל הרכבים.
+YOLO extracts bounding boxes around all visible vehicles.
 
 ✔️ Inpainting
 
-המודל "מוחק" את הרכב ומשחזר את שפת המדרכה באופן ריאליסטי.
+A diffusion-based inpainting model removes each detected vehicle and realistically reconstructs the background curb/road.
 
-✔️ Auto-labeling
+✔️ Auto-Labeling
 
-אזורי המדרכה שנחשפו לאחר מחיקת הרכב מתויגים כ:
+The newly exposed regions along the curb are interpreted and saved as:
 
 Free Parking Spot
 
-כך נבנה דאטה מתויג ללא עבודה ידנית.
+This produces fully supervised training samples automatically.
 
 🔧 Data Augmentation
 
-כדי להגדיל את עמידות המודל נוספו:
+To improve robustness and model generalization:
 
-שינויי תאורה (יום/ערב/צללים)
+Lighting variations (day/evening/shadows)
 
-שינויי בהירות וקונטרסט
+Brightness & contrast shifts
 
-טשטוש, רעש
+Noise, blur, weather-like distortions
 
-חיתוכים אקראיים (Random Crop)
+Random cropping
 
 🧠 Model
-✔️ YOLO (v8/v9) – Parking Spot Detector
+✔️ YOLO (v8 / v9) – Free Parking Spot Detector
 
-זהו המודל העיקרי והיחיד בפרויקט.
-הוא מאומן לזהות חניה פנויה בתמונה באמצעות הדאטה שנוצר.
+This is the main and only model used in the project.
+It is trained to detect free parking spaces using the auto-generated dataset.
 
 🏋️ Training Process
 
-יצירת סט אימון מלא הכולל:
+Build a complete training set from:
 
-תמונות Inpainting
+Inpainted images
 
-תוויות Bounding Boxes
+Automatically generated bounding boxes
 
-חלוקה:
+Split into:
 
-Train / Validation / Test
+Train
 
-אימון YOLO לאיתור חניה פנויה.
+Validation
 
-ניתוח ביצועים ושיפור המודל.
+Test
+
+Train YOLO for the task of free-spot detection.
+
+Evaluate, refine augmentations, and improve the dataset.
 
 📏 Evaluation Metrics
 
-הערכת הביצועים מתבצעת באמצעות:
+The model is evaluated using:
 
-mAP@50 – מדד הצלחה כלל-מערכתי
+mAP@50
 
-Precision & Recall
+Precision / Recall
 
-דוגמאות איכותיות (visual examples)
+Qualitative visualization examples
 
 📈 Results
 
-(הוסף תמונות, דוגמאות Inpainting, תוצאות YOLO וכו׳ כשהן יהיו מוכנות)
+(To be added: Inpainting samples, YOLO predictions, training curves, quantitative tables.)
 
 📁 Repository Structure
 
-(להוסיף בהתאם לתיקיות שיש לך — אם תרצה, אבנה לך מבנה קלאסי ל-MLOps)
+(Can be added once the folder tree is finalized. I can generate it for you.)
 
 👤 Team
 
