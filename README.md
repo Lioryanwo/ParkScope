@@ -62,3 +62,12 @@ python code/final_parking_system.py
 * **Dataset:** KITTI Vision Benchmark + Custom Synthetic Data
 
 ---
+### 📊 Performance Analysis
+To validate the model's reliability, we analyzed the training metrics across 100 epochs:
+
+* **Precision-Recall Balance:** The model achieved a high area under the curve (AUC), demonstrating robust detection even in complex street scenes.
+* **Classification Accuracy:** As shown in the Confusion Matrix, the system effectively distinguishes between 'Available' (84% accuracy) and 'Occupied' (88% accuracy) spots, minimizing false positives.
+
+| Precision-Recall Curve | Normalized Confusion Matrix |
+| :---: | :---: |
+| ![PR Curve](results/BoxPR_curve.png) | ![Confusion Matrix](results/confusion_matrix_normalized.png) |
