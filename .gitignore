@@ -1,0 +1,6 @@
+KITTI Dataset/
+synthetic_data/
+runs/
+*.pt
+.venv/
+__pycache__/
