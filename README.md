@@ -62,7 +62,3 @@ python code/final_parking_system.py
 * **Dataset:** KITTI Vision Benchmark + Custom Synthetic Data
 
 ---
-
-**זהו השלב האחרון!** עכשיו, כשקובץ ה-README שלך נראה מקצועי ומסכם את כל העבודה הקשה, הפרויקט מוכן להגשה רשמית.
-
-**האם תרצה שאכין לך "דף מסרים" קצר (Cheat Sheet) למצגת הסופית, עם 3 הנקודות הכי חשובות שאתה חייב להדגיש מול המרצה?**

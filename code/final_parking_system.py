@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 
-# 1. טעינת המודל הסופי שכולל את כל סוגי הדאטה (v2)
+# 1. Loading the final model trained on the comprehensive dataset (v2).
 MODEL_PATH = r'C:\ParkScope-main\ParkScope-main\runs\detect\parkscope_final_model\weights\best.pt'
 model = YOLO(MODEL_PATH)
 
@@ -9,11 +9,11 @@ def analyze_parking_optimized(img_path):
     img = cv2.imread(img_path)
     if img is None: return
 
-    # 2. הרצה ב-Confidence מאוזן (0.25) למניעת זיהויי שווא במדרכות
-    # שימוש ב-device=0 לביצועי GPU מהירים (1.0ms)
+    # 2. Inference with Balanced Confidence (0.25) to mitigate sidewalk false positives
+    # Utilizing 'device=0' for high-performance GPU inference (1.0ms)
     results = model(img_path, conf=0.25, device=0)[0]
     
-    # מיפוי מחלקות מהדאטה המקורי והסינתטי
+    # Mapping classes from both original and synthetic datasets.
     parking_classes = ['available', 'parking_slot', 'parking_spot', 'slot']
     vehicle_classes = ['occupied', 'car', 'bus', 'truck', 'van']
 
@@ -25,22 +25,22 @@ def analyze_parking_optimized(img_path):
         cls_name = model.names[int(box.cls[0])]
         conf = float(box.conf[0])
         
-        # זיהוי שטחי חניה (גם מקוריים וגם סינתטיים)
+        # Parking space detection (Both original and synthetic)
         if cls_name in parking_classes:
             found_slots.append({'box': b, 'conf': conf, 'label': cls_name})
-        # זיהוי רכבים תופסים
+        # Detection of occupied parking spots.
         elif cls_name in vehicle_classes:
             found_vehicles.append({'box': b, 'conf': conf})
 
-    # 3. ציור ואימות התוצאות
-    # רכבים תמיד מסומנים באדום (BUSY)
+    # 3. Visualizing and Validating Results
+    # Vehicles are always marked in red (BUSY status)
     for v in found_vehicles:
         cv2.rectangle(img, (int(v['box'][0]), int(v['box'][1])), 
                       (int(v['box'][2]), int(v['box'][3])), (0, 0, 255), 2)
         cv2.putText(img, f"BUSY ({v['conf']:.2f})", (int(v['box'][0]), int(v['box'][1]-10)), 
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    # חניות פנויות (כולל ה-GenAI) מסומנות בירוק (FREE)
+    # Available spots (including GenAI-generated) are marked in green (FREE status).
     for s in found_slots:
         cv2.rectangle(img, (int(s['box'][0]), int(s['box'][1])), 
                       (int(s['box'][2]), int(s['box'][3])), (0, 255, 0), 2)
