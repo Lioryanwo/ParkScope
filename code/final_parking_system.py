@@ -1,16 +1,18 @@
 import cv2
 from ultralytics import YOLO
+import os
 
 # 1. Loading the final model trained on the comprehensive dataset (v2).
-MODEL_PATH = r'C:\ParkScope-main\ParkScope-main\runs\detect\parkscope_final_model\weights\best.pt'
+MODEL_PATH = os.path.join('runs', 'detect', 'parkscope_final_model', 'weights', 'best.pt')
 model = YOLO(MODEL_PATH)
 
 def analyze_parking_optimized(img_path):
     img = cv2.imread(img_path)
-    if img is None: return
+    if img is None: 
+        print(f"Error: Could not find image at {img_path}")
+        return
 
     # 2. Inference with Balanced Confidence (0.25) to mitigate sidewalk false positives
-    # Utilizing 'device=0' for high-performance GPU inference (1.0ms)
     results = model(img_path, conf=0.25, device=0)[0]
     
     # Mapping classes from both original and synthetic datasets.
@@ -25,7 +27,7 @@ def analyze_parking_optimized(img_path):
         cls_name = model.names[int(box.cls[0])]
         conf = float(box.conf[0])
         
-        # Parking space detection (Both original and synthetic)
+        # Parking space detection (Both original and synthetic) [cite: 93-95]
         if cls_name in parking_classes:
             found_slots.append({'box': b, 'conf': conf, 'label': cls_name})
         # Detection of occupied parking spots.
@@ -47,9 +49,14 @@ def analyze_parking_optimized(img_path):
         cv2.putText(img, f"FREE ({s['conf']:.2f})", (int(s['box'][0]), int(s['box'][1]-10)), 
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    cv2.imwrite('parkscope_balanced_output.jpg', img)
-    print(f"Analysis complete. Result saved as parkscope_balanced_output.jpg")
+    # Saving output to the results folder as required by project structure.
+    output_folder = 'results'
+    os.makedirs(output_folder, exist_ok=True)
+    save_path = os.path.join(output_folder, 'parkscope_balanced_output.jpg')
+    cv2.imwrite(save_path, img)
+    print(f"Analysis complete. Result saved as {save_path}")
 
 if __name__ == '__main__':
-    test_img = r'C:\Parking_Spot_GenAI\Dataset KITTI\data_object_image_2\training\image_2\000010.png'
+    # Using relative path for the KITTI test image
+    test_img = os.path.join('Dataset KITTI', 'data_object_image_2', 'training', 'image_2', '000010.png')
     analyze_parking_optimized(test_img)

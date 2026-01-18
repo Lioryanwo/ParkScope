@@ -1,6 +1,20 @@
-KITTI Dataset/
-synthetic_data/
+# תוצרי אימון ומשקלים (קבצים כבדים מאוד)
 runs/
 *.pt
-.venv/
+*.onnx
+
+# דאטהסטים (הורדות מ-Roboflow ו-KITTI)
+roadside-parking-slots-2dpia-2/
+Dataset KITTI/
+synthetic_data/
+data/synthetic_empty_slots/
+
+# סביבה וירטואלית והגדרות מקומיות
+venv/
+.env
 __pycache__/
+.ipynb_checkpoints/
+
+# קבצי מערכת
+.DS_Store
+Thumbs.db

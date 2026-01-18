@@ -4,10 +4,12 @@ from ultralytics import YOLO
 import os
 import glob
 
-KITTI_IMG_PATH = r"C:\Parking_Spot_GenAI\Dataset KITTI\data_object_image_2\training\image_2\*.png" 
-OUTPUT_IMG_DIR = r"C:\Parking_Spot_GenAI\synthetic_data\images"
-OUTPUT_LBL_DIR = r"C:\Parking_Spot_GenAI\synthetic_data\labels"
+# Updated to relative paths consistent with the project repository structure
+KITTI_IMG_PATH = os.path.join("Dataset KITTI", "data_object_image_2", "training", "image_2", "*.png") 
+OUTPUT_IMG_DIR = os.path.join("synthetic_data", "images")
+OUTPUT_LBL_DIR = os.path.join("synthetic_data", "labels")
 
+# Ensuring the output directories exist to prevent crashes for teammates
 os.makedirs(OUTPUT_IMG_DIR, exist_ok=True)
 os.makedirs(OUTPUT_LBL_DIR, exist_ok=True)
 
@@ -18,12 +20,19 @@ def create_high_quality_synthetic():
     count = 0
     max_images = 500 # limit test to 500 photos
 
+    if not images:
+        print(f"Error: No images found in {KITTI_IMG_PATH}. Check repository structure.")
+        return
+
     for img_path in images:
         if count >= max_images:
             break
             
         img = cv2.imread(img_path)
-        results = vehicle_detector(img, half=True, device=0) # to speed thinks up we used GPU.
+        if img is None: continue
+
+        # to speed thinks up we used GPU.
+        results = vehicle_detector(img, half=True, device=0) 
         
         # Vehicle Filtering: Only vehicles with a width exceeding 100 pixels (to ensure clarity).
         boxes = []
@@ -56,7 +65,9 @@ def create_high_quality_synthetic():
             cx, cy = (x1 + x2) / 2 / w, (y1 + y2) / 2 / h
             bw, bh = (x2 - x1) / w, (y2 - y1) / h
             
-            with open(os.path.join(OUTPUT_LBL_DIR, fname.replace('.png', '.txt')), 'w') as f:
+            # Auto-generating YOLO labels for the synthetic "Available" spots
+            label_fname = fname.replace('.png', '.txt')
+            with open(os.path.join(OUTPUT_LBL_DIR, label_fname), 'w') as f:
                 f.write(f"0 {cx:.6f} {cy:.6f} {bw:.6f} {bh:.6f}\n")
             
             count += 1

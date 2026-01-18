@@ -1,4 +1,13 @@
+# Core Computer Vision & AI
 ultralytics
 opencv-python
 numpy
 roboflow
+
+# Generative AI (Stable Diffusion Pipeline)
+torch
+torchvision
+diffusers
+transformers
+accelerate
+pillow
