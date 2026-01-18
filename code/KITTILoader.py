@@ -71,7 +71,7 @@ def create_high_quality_synthetic():
                 f.write(f"0 {cx:.6f} {cy:.6f} {bw:.6f} {bh:.6f}\n")
             
             count += 1
-            print(f"✅ [{count}/{max_images}] Successfully synthesized high-quality parking space for: {fname}")
+            print(f"[{count}/{max_images}] Successfully synthesized high-quality parking space for: {fname}")
 
 if __name__ == "__main__":
     create_high_quality_synthetic()
