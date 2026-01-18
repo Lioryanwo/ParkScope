@@ -7,7 +7,6 @@ import os
 
 # 1. Model Loading:
 print("Loading Models...")
-# Updated to a relative path based on the project repository structure
 YOLO_MODEL_PATH = os.path.join('runs', 'detect', 'vehicle_detection_final', 'weights', 'best.pt')
 yolo_model = YOLO(YOLO_MODEL_PATH)
 
@@ -44,7 +43,6 @@ def generate_parking_dataset(img_path, output_folder):
         synthetic_img = pipe(prompt=prompt, image=img, mask_image=mask_img).images[0]
 
         # save to..
-        # Using relative output folder path
         save_path = os.path.join(output_folder, f"synthetic_{os.path.basename(img_path).split('.')[0]}_{i}.jpg")
         synthetic_img.save(save_path)
 

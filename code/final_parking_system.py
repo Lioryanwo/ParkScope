@@ -52,7 +52,7 @@ def analyze_parking_optimized(img_path):
     # Saving output to the results folder as required by project structure.
     output_folder = 'results'
     os.makedirs(output_folder, exist_ok=True)
-    save_path = os.path.join(output_folder, 'parkscope_balanced_output.jpg')
+    save_path = os.path.join(output_folder, 'parkscope_output.jpg')
     cv2.imwrite(save_path, img)
     print(f"Analysis complete. Result saved as {save_path}")
 

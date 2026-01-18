@@ -4,7 +4,7 @@ import os
 def train():
     # 1. Reference the local dataset path instead of downloading every time
     # The folder name should match what Roboflow created in your project directory
-    dataset_path = os.path.join('roadside-parking-slots-2dpia-2', 'data.yaml')
+    dataset_path = os.path.join('Roadside-Parking-Slots-1', 'data.yaml')
 
     # Verify if dataset exists before starting
     if not os.path.exists(dataset_path):
